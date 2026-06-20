@@ -29,13 +29,13 @@ bun install
 MCP settings → `+ Add` → pegar (o ponerlo en `~/.agents/.mcp.json`):
 
 ```json
-{ "mcpServers": { "batuta": { "command": "bun", "args": ["run", "C:\\mcp-s\\batuta-mcp\\src\\index.ts"] } } }
+{ "mcpServers": { "batuta": { "command": "bun", "args": ["run", "C:\\batuta-mcp\\src\\index.ts"] } } }
 ```
 
 ### Claude Code
 
 ```bash
-claude mcp add batuta -- bun run C:\mcp-s\batuta-mcp\src\index.ts
+claude mcp add batuta -- bun run C:\batuta-mcp\src\index.ts
 ```
 
 ## Flujo
