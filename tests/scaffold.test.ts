@@ -1,0 +1,94 @@
+import { test, expect } from "bun:test";
+import { worktreePathFor, scaffoldWorktrees } from "../src/tools/scaffold";
+import { FakeRunner } from "../src/lib/runner";
+import type { Plan, RunResult } from "../src/types";
+
+const okRepo: RunResult = { code: 0, stdout: "true\n", stderr: "" };
+const plan = (slug: string, files: string[]): Plan => ({
+  title: slug, specMd: "", fileBoundaries: files, branchSlug: slug,
+});
+
+test("worktreePathFor usa .worktrees y normaliza separadores", () => {
+  expect(worktreePathFor("C:\\proj", "feat-a")).toBe("C:/proj/.worktrees/feat-a");
+});
+
+test("rechaza si no es repo git", async () => {
+  const runner = new FakeRunner([{ code: 128, stdout: "", stderr: "not a git repo" }]);
+  const res = await scaffoldWorktrees(
+    { repoPath: "/x", plans: [plan("a", ["a.ts"])] },
+    { runner },
+  );
+  expect(res.ok).toBe(false);
+  expect(res.error).toContain("git");
+});
+
+test("rechaza si hay solape", async () => {
+  const runner = new FakeRunner([okRepo]);
+  const res = await scaffoldWorktrees(
+    { repoPath: "/x", plans: [plan("a", ["x.ts"]), plan("b", ["x.ts"])] },
+    { runner },
+  );
+  expect(res.ok).toBe(false);
+  expect(res.error?.toLowerCase()).toContain("overlap");
+});
+
+test("rechaza fronteras inseguras", async () => {
+  const runner = new FakeRunner([okRepo]);
+  const res = await scaffoldWorktrees(
+    { repoPath: "/x", plans: [plan("a", ["../escape.ts"])] },
+    { runner },
+  );
+  expect(res.ok).toBe(false);
+  expect(res.error?.toLowerCase()).toContain("unsafe");
+});
+
+test("dryRun no ejecuta git worktree add", async () => {
+  const runner = new FakeRunner([okRepo]); // solo el rev-parse
+  const res = await scaffoldWorktrees(
+    { repoPath: "/x", plans: [plan("a", ["a.ts"])], dryRun: true },
+    { runner },
+  );
+  expect(res.ok).toBe(true);
+  expect(res.results[0]!.suggestedPrompt).toContain("a");
+  expect(res.results[0]!.message).toContain("dry-run");
+  // solo se llamó al rev-parse, no a worktree add
+  expect(runner.calls.length).toBe(1);
+});
+
+test("crea worktree real (status created)", async () => {
+  const runner = new FakeRunner([okRepo, { code: 0, stdout: "", stderr: "" }]);
+  const res = await scaffoldWorktrees(
+    { repoPath: "/x", plans: [plan("a", ["a.ts"])] },
+    { runner },
+  );
+  expect(res.ok).toBe(true);
+  expect(res.results[0]!.status).toBe("created");
+  expect(runner.calls[1]!.cmd).toContain("worktree");
+});
+
+test("rechaza branchSlug con traversal (no escapa de .worktrees)", async () => {
+  const runner = new FakeRunner([okRepo]); // solo rev-parse debe correr
+  const res = await scaffoldWorktrees(
+    { repoPath: "/x", plans: [{ title: "evil", specMd: "", fileBoundaries: ["a.ts"], branchSlug: "../../evil" }] },
+    { runner },
+  );
+  expect(res.ok).toBe(false);
+  expect(res.error?.toLowerCase()).toContain("branchslug");
+  expect(runner.calls.length).toBe(1); // no se ejecutó worktree add
+});
+
+test("aísla fallos por plan: uno falla, el otro se crea", async () => {
+  const runner = new FakeRunner([
+    okRepo,                                            // rev-parse pre-flight
+    { code: 0, stdout: "", stderr: "" },               // plan "a" → created
+    { code: 1, stdout: "", stderr: "fatal: boom" },    // plan "b" → error
+  ]);
+  const res = await scaffoldWorktrees(
+    { repoPath: "/x", plans: [plan("a", ["a.ts"]), plan("b", ["b.ts"])] },
+    { runner },
+  );
+  expect(res.ok).toBe(true);
+  expect(res.results[0]!.status).toBe("created");
+  expect(res.results[1]!.status).toBe("error");
+  expect(res.results[1]!.message).toContain("boom");
+});
