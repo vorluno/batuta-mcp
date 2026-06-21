@@ -1,9 +1,41 @@
 {
-  "name": "batuta-mcp",
+  "name": "@vorluno/batuta-mcp",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
-  "bin": { "batuta-mcp": "./src/index.ts" },
+  "description": "MCP server that splits a task into plans with disjoint file boundaries and scaffolds a git worktree per plan — conflict-free parallel coding agents.",
+  "mcpName": "io.github.vorluno/batuta-mcp",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "mcp-server",
+    "claude",
+    "claude-code",
+    "ai-agents",
+    "multi-agent",
+    "git-worktree",
+    "bun"
+  ],
+  "homepage": "https://github.com/vorluno/batuta-mcp#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vorluno/batuta-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vorluno/batuta-mcp/issues"
+  },
+  "author": "Vorluno (https://vorluno.dev)",
+  "license": "MIT",
+  "bin": {
+    "batuta-mcp": "./src/index.ts"
+  },
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "start": "bun run src/index.ts",
     "test": "bun test",
