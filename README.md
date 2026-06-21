@@ -1,5 +1,7 @@
 <div align="center">
 
+<img src="./assets/banner.jpg" alt="batuta-mcp — disjoint plans and git worktrees for parallel agents" width="100%" />
+
 # batuta-mcp
 
 **Split a task into plans with disjoint file boundaries, then scaffold a git worktree per plan — so parallel agents never step on each other.**
