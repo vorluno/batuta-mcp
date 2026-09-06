@@ -8,7 +8,7 @@
 
 A stateless MCP server that turns a brain dump into conflict-free parallel work.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](./LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](./LICENSE)
 [![Bun](https://img.shields.io/badge/Bun-1.3+-fbf0df?logo=bun&logoColor=black)](https://bun.sh)
 [![Model Context Protocol](https://img.shields.io/badge/MCP-compatible-6E56CF)](https://modelcontextprotocol.io)
 [![Built with Claude Code](https://img.shields.io/badge/Built_with-Claude_Code-D97757)](https://claude.com/claude-code)
@@ -50,11 +50,18 @@ The "muscle" (running the agents, the terminals) stays in your editor; batuta-mc
 
 ## Installation
 
+**From npm** — nothing to clone:
+
+```bash
+claude mcp add batuta -- bunx --bun @vorluno/batuta-mcp
+```
+
+**From source** — if you want to change it:
+
 ```bash
 git clone https://github.com/vorluno/batuta-mcp.git
 cd batuta-mcp
 bun install
-
 claude mcp add batuta -- bun run /absolute/path/to/batuta-mcp/src/index.ts
 ```
 
@@ -98,9 +105,18 @@ bunx tsc --noEmit # type-check
 
 Built test-first across 10 TDD tasks with per-task and whole-branch review.
 
+## Contributing and security
+
+Read [CONTRIBUTING.md](./CONTRIBUTING.md) first — its first line tells you whether your pull request
+will be considered. Vulnerabilities go to **security@vorluno.dev**, never to an issue: see
+[SECURITY.md](./SECURITY.md), where the 72-hour acknowledgement is the one response time we commit to.
+
 ## License
 
-[MIT](./LICENSE) © 2026 Vorluno
+[Apache-2.0](./LICENSE) © 2026 Vorluno. See [NOTICE](./NOTICE).
+
+Up to and including **0.1.0** this was MIT. Those releases stay MIT — a licence already granted
+cannot be withdrawn. From **0.2.0** on it is Apache-2.0, which grants patent rights explicitly.
 
 ---
 
