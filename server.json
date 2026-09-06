@@ -1,7 +1,7 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.vorluno/batuta-mcp",
-  "description": "MCP server that splits a task into plans with disjoint file boundaries and scaffolds a git worktree per plan — conflict-free parallel coding agents.",
+  "description": "Split a task into plans with disjoint file boundaries; scaffold a git worktree per plan.",
   "repository": {
     "url": "https://github.com/vorluno/batuta-mcp",
     "source": "github"
