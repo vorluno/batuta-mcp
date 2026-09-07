@@ -17,6 +17,17 @@ A stateless MCP server that turns a brain dump into conflict-free parallel work.
 
 ---
 
+> ## Retired
+>
+> **Claude Code now does this itself.** Splitting work across isolated worktrees so parallel agents do
+> not collide is built in, which is what this existed to provide.
+>
+> The repository is archived and read-only. **It still works** — nothing was removed from npm, and the
+> last published version keeps installing — but it will not be maintained, and it does not need to be.
+> If you want the idea rather than the package, the whole design is in `docs/` and the licence lets you
+> take it.
+
+
 ## Why
 
 Running several coding agents in parallel is fast — until two of them edit the same file and silently clobber each other's work. The fix isn't live coordination; it's **separation**: give each agent a set of files that **don't overlap**, and the conflict can't happen by design.
